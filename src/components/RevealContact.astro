@@ -1,0 +1,101 @@
+---
+/**
+ * Click-to-reveal phone / email.
+ *
+ * The HTML contains NO contact data at all. The base64 values live in src/data/contact.ts
+ * and are bundled into the client script below, which decodes them with atob() only after a
+ * genuine (trusted) click or tap.
+ *
+ * variant="block"  icon + small label + value (contact section) -> becomes a tel:/mailto: link
+ * variant="inline" text inside a sentence                       -> becomes a tel:/mailto: link
+ * variant="icon"   icon-only button; one tap opens the mail app
+ */
+interface Props {
+  type: 'phone' | 'email';
+  variant: 'block' | 'inline' | 'icon';
+  label?: string;
+  ariaLabel?: string;
+}
+
+const { type, variant, label, ariaLabel } = Astro.props;
+const hiddenText = type === 'phone' ? 'Tap to show phone number' : 'Tap to show email';
+const inlineText = type === 'phone' ? 'tap to show our phone number' : 'tap to show our email';
+---
+
+{
+  variant === 'icon' && (
+    <button type="button" class="reveal-icon" data-reveal={type} data-variant="icon" aria-label={ariaLabel}>
+      <slot name="icon" />
+    </button>
+  )
+}
+{
+  variant === 'inline' && (
+    <button type="button" class="reveal-inline" data-reveal={type} data-variant="inline">
+      {inlineText}
+    </button>
+  )
+}
+{
+  variant === 'block' && (
+    <button type="button" class="reveal-btn" data-reveal={type} data-variant="block">
+      <slot name="icon" /><span><small>{label}</small>{hiddenText}</span>
+    </button>
+  )
+}
+
+<script>
+  import { phoneEncoded, emailEncoded } from '../data/contact';
+
+  const encoded = { phone: phoneEncoded, email: emailEncoded } as const;
+
+  const decode = (v: string) => {
+    try {
+      return atob(v);
+    } catch {
+      return '';
+    }
+  };
+
+  const hrefFor = (type: 'phone' | 'email', value: string) => {
+    if (type === 'email') return `mailto:${value}`;
+    const digits = value.replace(/\D/g, '');
+    return `tel:${digits.length === 10 ? '+1' : '+'}${digits}`;
+  };
+
+  document.addEventListener('click', (event) => {
+    if (!event.isTrusted) return; // ignore script-generated clicks
+    const button = (event.target as Element | null)?.closest<HTMLButtonElement>('button[data-reveal]');
+    if (!button) return;
+
+    const type = button.dataset.reveal as 'phone' | 'email';
+    const variant = button.dataset.variant;
+    const value = decode(encoded[type]);
+    if (!value) return;
+    const href = hrefFor(type, value);
+
+    // Icon: reveal and open the mail app in one tap, nothing shown on the page
+    if (variant === 'icon') {
+      window.location.href = href;
+      return;
+    }
+
+    // Swap the button for a real link with the same look and children
+    const link = document.createElement('a');
+    link.href = href;
+    link.className = variant === 'inline' ? 'reveal-inline' : '';
+    while (button.firstChild) link.appendChild(button.firstChild);
+
+    if (variant === 'inline') {
+      link.textContent = value;
+    } else {
+      const span = link.querySelector('span');
+      if (span?.lastChild) span.lastChild.textContent = value;
+    }
+
+    // If the same contact is revealed elsewhere on the page it stays hidden until clicked;
+    // each instance reveals independently, like before.
+    button.replaceWith(link);
+    link.focus({ preventScroll: true });
+  });
+</script>

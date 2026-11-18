@@ -1,0 +1,46 @@
+---
+import { ArrowRight, Menu, X } from '@lucide/astro';
+import BrandLogo from './BrandLogo.astro';
+
+const navItems = [
+  { label: 'About', href: '#about' },
+  { label: 'Services', href: '#services' },
+  { label: 'Our team', href: '#team' },
+  { label: 'Reviews', href: '#reviews' },
+];
+---
+
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href="#top" aria-label="Top Flight Security home">
+      <BrandLogo height={46} class="brand-logo" />
+      <span class="brand-copy"><span>Top Flight</span><strong>Security</strong></span>
+    </a>
+    <nav class="main-nav" id="main-nav" aria-label="Primary">
+      {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+      <a class="nav-cta" href="#contact">Request a quote <ArrowRight size={15} /></a>
+    </nav>
+    <button class="menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-nav">
+      <span class="icon-open"><Menu size={24} /></span>
+      <span class="icon-close" hidden><X size={24} /></span>
+    </button>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const nav = document.querySelector<HTMLElement>('#main-nav');
+  const iconOpen = toggle?.querySelector<HTMLElement>('.icon-open');
+  const iconClose = toggle?.querySelector<HTMLElement>('.icon-close');
+
+  const setOpen = (open: boolean) => {
+    if (!toggle || !nav || !iconOpen || !iconClose) return;
+    nav.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    iconOpen.hidden = open;
+    iconClose.hidden = !open;
+  };
+
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  nav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+</script>

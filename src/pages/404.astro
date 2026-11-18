@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { withBase } from '../utils/url';
+---
+
+<Layout title="Page not found | Top Flight Security" noindex>
+  <main class="section" style="min-height:100vh;display:grid;place-items:center;text-align:center;background:var(--night);color:#fff">
+    <div class="container">
+      <div class="eyebrow light" style="justify-content:center"><span class="eyebrow-line"></span> 404</div>
+      <h1 style="font-size:clamp(40px,6vw,64px);letter-spacing:-.04em;margin:20px 0">Page not found</h1>
+      <p style="color:rgba(255,255,255,.62);margin-bottom:30px">The page you’re looking for doesn’t exist or has moved.</p>
+      <a class="button button-primary" href={withBase('/')}>Back to home</a>
+    </div>
+  </main>
+</Layout>

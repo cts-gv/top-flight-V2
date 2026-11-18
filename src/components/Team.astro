@@ -1,0 +1,35 @@
+---
+import { siteConfig } from '../data/siteConfig';
+---
+
+<section id="team" class="section team-section">
+  <div class="container">
+    <div class="section-heading team-heading">
+      <div>
+        <div class="eyebrow light"><span class="eyebrow-line"></span> The people behind the protection</div>
+        <h2>A team you can <em>count on.</em></h2>
+      </div>
+      <p>Good security starts with good people. Meet the professionals who bring experience, empathy, and readiness to every assignment.</p>
+    </div>
+    <div class="team-banner">
+      <img src={siteConfig.images.team} alt="Top Flight Security team" width="1800" height="650" loading="lazy" decoding="async" />
+      <div class="banner-label">One team. One standard.</div>
+    </div>
+    <div class="team-grid">
+      {
+        siteConfig.team.map((member) => (
+          <article class="member-card">
+            <div class="member-image">
+              <img src={siteConfig.images.members[member.imageIndex]} alt={member.name} width="94" height="118" loading="lazy" decoding="async" />
+            </div>
+            <div class="member-info">
+              <h3>{member.name}</h3>
+              <span>{member.role}</span>
+              <p>{member.bio}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

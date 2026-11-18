@@ -1,0 +1,32 @@
+---
+import { Mail } from '@lucide/astro';
+import RevealContact from './RevealContact.astro';
+import BrandLogo from './BrandLogo.astro';
+import { siteConfig } from '../data/siteConfig';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-top">
+    <a class="brand footer-brand" href="#top">
+      <BrandLogo height={40} class="brand-logo" />
+      <span class="brand-copy"><span>Top Flight</span><strong>Security</strong></span>
+    </a>
+    <p>Protecting what matters across the Yakima Valley.</p>
+    <div class="footer-links">
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+      <RevealContact type="email" variant="icon" ariaLabel="Email Top Flight Security"><Mail slot="icon" size={18} /></RevealContact>
+      <a href={siteConfig.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+      </a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© {year} Top Flight Security. All rights reserved.</span>
+    <span>Serving Sunnyside, WA &amp; surrounding areas</span>
+    <span>Created by: <a class="creator-link" href="https://ctechsolution.tech" target="_blank" rel="noopener noreferrer">Community Tech Solutions</a></span>
+  </div>
+</footer>

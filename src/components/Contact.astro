@@ -1,0 +1,126 @@
+---
+import { ArrowRight, Check, Mail, MapPin, Phone } from '@lucide/astro';
+import RevealContact from './RevealContact.astro';
+import BrandLogo from './BrandLogo.astro';
+import { siteConfig } from '../data/siteConfig';
+---
+
+<section id="contact" class="section contact-section">
+  <div class="container contact-layout">
+    <div class="contact-copy">
+      <div class="eyebrow light"><span class="eyebrow-line"></span> Start a conversation</div>
+      <h2>Let’s make a <em>safe plan.</em></h2>
+      <p>Tell us a little about what you are protecting. We will follow up with thoughtful next steps and a clear quote.</p>
+      <div class="contact-details">
+        <RevealContact type="phone" variant="block" label="Call us anytime"><Phone slot="icon" size={17} /></RevealContact>
+        <RevealContact type="email" variant="block" label="Email our team"><Mail slot="icon" size={17} /></RevealContact>
+        <div><MapPin size={17} /><span><small>Based in</small>{siteConfig.location}</span></div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="success-message" id="form-success" role="status" aria-live="polite" hidden>
+        <BrandLogo variant="dark" height={293} class="success-watermark" />
+        <div class="success-content">
+          <span class="success-icon"><Check size={25} /></span>
+          <h3>Thank you. We received your submission.</h3>
+          <p>Someone from our team will reach out to you in less than 24 hours.</p>
+          <p class="success-contact">Need us sooner? Call us: <RevealContact type="phone" variant="inline" />.</p>
+        </div>
+      </div>
+
+      <form id="quote-form" data-endpoint={siteConfig.formspreeEndpoint}>
+        <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+          <label>Leave this field empty<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label>
+        </div>
+        <div class="form-row">
+          <label>Full name<input required name="name" type="text" placeholder="Your full name" autocomplete="name" /></label>
+          <label>Phone number<input required name="phone" type="tel" placeholder="(509) 000-0000" autocomplete="tel" /></label>
+        </div>
+        <div class="form-row">
+          <label>Email address<input required name="email" type="email" placeholder="you@example.com" autocomplete="email" /></label>
+          <label>
+            Event type
+            <select required name="eventType">
+              <option value="" disabled selected>Select one</option>
+              <option>Wedding or quinceañera</option>
+              <option>Birthday or private event</option>
+              <option>Wine tasting</option>
+              <option>Concert or special event</option>
+              <option>Business or home monitoring</option>
+              <option>Other</option>
+            </select>
+          </label>
+        </div>
+        <label>Describe your event<textarea required name="message" rows="4" placeholder="Date, location, guest count, and what you have in mind..."></textarea></label>
+        <div class="consent-list">
+          <label class="consent"><input required name="phoneConsent" type="checkbox" /> <span>I consent to being contacted by phone about my inquiry.</span></label>
+          <label class="consent"><input required name="emailConsent" type="checkbox" /> <span>I consent to being contacted by email about my inquiry.</span></label>
+        </div>
+        <p class="form-error" id="form-error" role="alert" hidden>
+          Sorry, something went wrong sending your request. Please try again or call us: <RevealContact type="phone" variant="inline" />.
+        </p>
+        <button class="button button-primary form-submit" type="submit">
+          <span class="submit-label">Request your quote <ArrowRight size={17} /></span>
+          <span class="submit-sending" hidden>Sending...</span>
+        </button>
+        <p class="form-note">Your information stays with our team and is only used to respond to your request.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#quote-form');
+  const success = document.querySelector<HTMLElement>('#form-success');
+  const errorMsg = document.querySelector<HTMLElement>('#form-error');
+  const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const label = submit?.querySelector<HTMLElement>('.submit-label');
+  const sending = submit?.querySelector<HTMLElement>('.submit-sending');
+  let isSending = false;
+
+  const showSuccess = () => {
+    form!.reset();
+    form!.hidden = true;
+    success!.hidden = false;
+  };
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (isSending || !submit || !label || !sending || !errorMsg || !success) return;
+    const data = new FormData(form);
+
+    // Honeypot: a hidden field only bots fill in. Pretend it worked, send nothing.
+    if (String(data.get('_gotcha') ?? '').trim()) {
+      showSuccess();
+      return;
+    }
+
+    isSending = true;
+    submit.disabled = true;
+    label.hidden = true;
+    sending.hidden = false;
+    errorMsg.hidden = true;
+
+    try {
+      const endpoint = form.dataset.endpoint ?? '';
+      // Until a real Formspree ID is added, just show the thank-you message (handy for previewing).
+      if (!endpoint.includes('your-form-id')) {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body: data,
+          headers: { Accept: 'application/json' },
+        });
+        if (!response.ok) throw new Error('Form submission failed');
+      }
+      showSuccess();
+    } catch {
+      errorMsg.hidden = false;
+    } finally {
+      isSending = false;
+      submit.disabled = false;
+      label.hidden = false;
+      sending.hidden = true;
+    }
+  });
+</script>

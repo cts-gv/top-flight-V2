@@ -1,0 +1,39 @@
+---
+import { ArrowRight, Building2, Car, House, Sparkles, Users, Wine } from '@lucide/astro';
+import { siteConfig, type ServiceIconName } from '../data/siteConfig';
+
+const icons: Record<ServiceIconName, typeof Sparkles> = {
+  sparkles: Sparkles,
+  wine: Wine,
+  users: Users,
+  building: Building2,
+  car: Car,
+  house: House,
+};
+---
+
+<section id="services" class="section services-section">
+  <div class="container">
+    <div class="section-heading centered">
+      <div class="eyebrow"><span class="eyebrow-line"></span> What we do</div>
+      <h2>Coverage built around <em>your world.</em></h2>
+      <p>From intimate gatherings to complex operations, our services adapt to the way you live, work, and celebrate.</p>
+    </div>
+    <div class="services-grid">
+      {
+        siteConfig.services.map((service, index) => {
+          const Icon = icons[service.icon];
+          return (
+            <article class="service-card">
+              <span class="service-number">0{index + 1}</span>
+              <div class="service-icon"><Icon size={23} stroke-width={1.7} /></div>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+              <a href="#contact" aria-label={`Request a quote for ${service.title}`}><ArrowRight size={17} /></a>
+            </article>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

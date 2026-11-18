@@ -1,0 +1,58 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { ArrowRight, ChevronDown, Clock3, ShieldCheck, Video } from '@lucide/astro';
+import { siteConfig } from '../data/siteConfig';
+import { withBase } from '../utils/url';
+
+// Optimized poster so the first paint is a small WebP, not the 300 KB original
+const poster = await getImage({ src: siteConfig.images.heroFallback, width: 1440, format: 'webp' });
+---
+
+<section class="hero-section">
+  <div class="hero-media">
+    <video autoplay muted loop playsinline preload="metadata" poster={poster.src} src={withBase(siteConfig.videoPath)} aria-hidden="true"></video>
+    <Image
+      class="hero-fallback"
+      src={siteConfig.images.heroFallback}
+      alt="Security professional on patrol"
+      widths={[640, 1024, 1440, 1920]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-grid"></div>
+  <div class="container hero-content">
+    <div class="eyebrow light"><span class="eyebrow-line"></span> Local protection. Elevated standards.</div>
+    <h1>
+      <span class="hero-title-left">Protection</span><span class="hero-title-right">with purpose.</span>
+    </h1>
+    <p class="hero-intro">
+      Quiet confidence for the moments that matter. Top Flight Security keeps people, places, and celebrations safe
+      across the Yakima Valley.
+    </p>
+    <div class="hero-actions">
+      <a class="button button-primary" href="#contact">Plan your protection <ArrowRight size={17} /></a>
+      <a class="button button-ghost" href="#services"><span class="play-icon"><Video size={15} /></span> Explore services</a>
+    </div>
+    <div class="hero-proof">
+      <span><ShieldCheck size={18} /> Licensed &amp; insured</span>
+      <span><Clock3 size={18} /> Management available 24/7</span>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Scroll to discover</span><ChevronDown size={17} /></div>
+</section>
+
+<script>
+  // If the video can't load, reveal the still image instead
+  const video = document.querySelector<HTMLVideoElement>('.hero-media video');
+  const fallback = document.querySelector<HTMLElement>('.hero-fallback');
+  const showFallback = () => {
+    video?.remove();
+    fallback?.classList.add('is-visible');
+  };
+  video?.addEventListener('error', showFallback);
+  // The error may have fired before this script ran
+  if (video?.error) showFallback();
+</script>

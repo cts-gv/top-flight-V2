@@ -1,0 +1,25 @@
+---
+import { Quote } from '@lucide/astro';
+---
+
+<section id="reviews" class="section reviews-section">
+  <div class="container reviews-layout">
+    <div class="review-intro">
+      <div class="eyebrow"><span class="eyebrow-line"></span> Kind words</div>
+      <h2>Peace of mind is <em>the best review.</em></h2>
+      <div class="rating">
+        <strong>5.0</strong>
+        <span><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><small>Trusted by local families, businesses &amp; event hosts</small></span>
+      </div>
+    </div>
+    <div class="review-card">
+      <Quote size={34} class="quote-mark" />
+      <p>“Top Flight made our event feel effortless. Their team was professional, present, and so respectful of the celebration. We could actually relax and enjoy our night.”</p>
+      <div class="review-author">
+        <span class="author-avatar">JR</span>
+        <span><b>Jordan R.</b><small>Private event client</small></span>
+        <span class="review-stars" aria-hidden="true">★★★★★</span>
+      </div>
+    </div>
+  </div>
+</section>

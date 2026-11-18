@@ -1,0 +1,54 @@
+import logoLight from '../assets/logo-light.png';
+import logoDark from '../assets/logo-dark.png';
+import heroFallback from '../assets/hero_background.jpg';
+
+export const siteConfig = {
+  businessName: 'Top Flight Security',
+  shortName: 'TFS',
+  tagline: 'Local protection. Elevated standards.',
+  description:
+    'Top Flight Security provides professional security services for events, businesses, homes, and communities across the Yakima Valley. Based in Sunnyside, WA.',
+  location: 'Sunnyside, Washington',
+  locality: 'Sunnyside',
+  region: 'WA',
+  serviceArea: 'Yakima Valley & surrounding areas',
+  facebookUrl: 'https://www.facebook.com/p/TOP-Flight-Security-100057310125362/',
+  formspreeEndpoint: 'https://formspree.io/f/xljjlzqr',
+  // Lives in /public so it streams as a normal file (not run through the image optimizer)
+  videoPath: 'video.mp4',
+  ogImagePath: 'og-image.jpg',
+  images: {
+    logo: logoLight,
+    logoDark,
+    heroFallback,
+    about:
+      'https://images.pexels.com/photos/30516933/pexels-photo-30516933.jpeg?auto=compress&cs=tinysrgb&w=1400',
+    team: 'https://images.pexels.com/photos/7714726/pexels-photo-7714726.jpeg?auto=compress&cs=tinysrgb&w=1800',
+    members: [
+      'https://images.pexels.com/photos/31282368/pexels-photo-31282368.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://images.pexels.com/photos/7714715/pexels-photo-7714715.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://images.pexels.com/photos/27299956/pexels-photo-27299956.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://images.pexels.com/photos/33693998/pexels-photo-33693998.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://images.pexels.com/photos/30516935/pexels-photo-30516935.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://images.pexels.com/photos/14156215/pexels-photo-14156215.jpeg?auto=compress&cs=tinysrgb&w=800',
+    ],
+  },
+  services: [
+    { title: 'Private Events', description: 'Professional, discreet coverage for weddings, quinceañeras, birthdays, and celebrations.', icon: 'sparkles' },
+    { title: 'Wine Country', description: 'Calm, attentive security for tastings, vineyards, and hospitality events across the valley.', icon: 'wine' },
+    { title: 'Concerts & Crowds', description: 'A visible, experienced presence that keeps guests, staff, and performers moving safely.', icon: 'users' },
+    { title: 'Business Monitoring', description: 'Protect your property and people with dependable watch services tailored to your operation.', icon: 'building' },
+    { title: 'Mobile Patrol', description: '24-hour coverage with responsive vehicle patrols for homes, businesses, and properties.', icon: 'car' },
+    { title: 'Home Monitoring', description: 'Peace of mind at home with a trusted team on call day and night, every day of the year.', icon: 'house' },
+  ],
+  team: [
+    { name: 'Mark Gourneau', role: 'Owner & Director', bio: 'Leading with local knowledge, steady judgment, and a commitment to showing up.', imageIndex: 0 },
+    { name: 'Avery Collins', role: 'Operations Manager', bio: 'Coordinating every detail so every assignment feels calm and considered.', imageIndex: 1 },
+    { name: 'Jordan Reyes', role: 'Event Lead', bio: 'Keeping people safe while preserving the energy and spirit of each event.', imageIndex: 2 },
+    { name: 'Morgan Hale', role: 'Field Supervisor', bio: 'Bringing thoughtful leadership and dependable communication to every shift.', imageIndex: 3 },
+    { name: 'Chris Bennett', role: 'Patrol Lead', bio: 'Protecting local properties with a visible presence and quick response.', imageIndex: 4 },
+    { name: 'Taylor Brooks', role: 'Client Relations', bio: 'Your first point of contact for clear answers and around-the-clock support.', imageIndex: 5 },
+  ],
+} as const;
+
+export type ServiceIconName = (typeof siteConfig.services)[number]['icon'];
